@@ -303,6 +303,16 @@ input.err,select.err{border-color:var(--danger);}
 .lb-rank{font-family:var(--font-mono);font-weight:800;width:34px;}
 .lb-alias{display:flex;align-items:center;gap:10px;font-weight:700;}
 .lb-alias .av{width:32px;height:32px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:16px;border:1px solid var(--border);flex-shrink:0;}
+@media(max-width:520px){
+  .lb-table th,.lb-table td{padding:9px 5px;font-size:12.5px;}
+  .lb-alias{gap:7px;}
+  .lb-alias .av{width:24px;height:24px;font-size:12px;}
+  .col-exactos{display:none;}
+  .lb-table .pill{padding:3px 7px;font-size:9.5px;}
+}
+@media(max-width:400px){
+  .col-cliente{display:none;}
+}
 .lb-pts{font-family:var(--font-mono);font-weight:800;text-align:right;}
 .medal{font-size:17px;}
 .overflow-x{overflow-x:auto;}
@@ -577,7 +587,7 @@ footer b{color:var(--ink-dim);}
     </div>
     <div class="card overflow-x">
       <table class="lb-table" id="tablaClasificacion">
-        <thead><tr><th></th><th>Alias</th><th>Cliente</th><th style="text-align:right">Exactos</th><th style="text-align:right">Puntos</th></tr></thead>
+        <thead><tr><th></th><th>Alias</th><th class="col-cliente">Cliente</th><th class="col-exactos" style="text-align:right">Exactos</th><th style="text-align:right">Puntos</th></tr></thead>
         <tbody id="lbBody"></tbody>
       </table>
       <div class="empty-state" id="lbEmpty" style="display:none;">
@@ -1238,8 +1248,8 @@ function renderClasificacion(){
       tr.innerHTML = `
         <td class="lb-rank">${medalla || (i+1)}</td>
         <td><div class="lb-alias"><span class="av">${avatarFor(f.uid)}</span>${aliasFor(f.uid)}</div></td>
-        <td><span class="pill ${f.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${f.cliente}</span></td>
-        <td style="text-align:right" class="tabular">${f.exactos}</td>
+        <td class="col-cliente"><span class="pill ${f.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${f.cliente}</span></td>
+        <td class="col-exactos tabular" style="text-align:right">${f.exactos}</td>
         <td class="lb-pts tabular">${f.total}</td>
       `;
       body.appendChild(tr);
