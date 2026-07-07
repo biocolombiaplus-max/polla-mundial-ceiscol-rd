@@ -391,8 +391,8 @@ footer b{color:var(--ink-dim);}
     </div>
     <div class="hero-next" id="heroNext"></div>
     <div class="hero-cta">
-      <button class="btn btn-primary" onclick="goto('registro')">🏆 Inscribirme a la polla</button>
-      <button class="btn btn-ghost" onclick="goto('reglas')">📋 Ver reglamento</button>
+      <button class="btn btn-primary" data-goto="registro">🏆 Inscribirme a la polla</button>
+      <button class="btn btn-ghost" data-goto="reglas">📋 Ver reglamento</button>
     </div>
   </div>
 </section>
@@ -517,7 +517,7 @@ footer b{color:var(--ink-dim);}
           <div class="field full">
             <div class="check-row">
               <input type="checkbox" id="aceptaReglas">
-              <label for="aceptaReglas">He leído y acepto el <a href="javascript:void(0)" onclick="goto('reglas')">reglamento de la polla</a> y autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 (Habeas Data) para efectos exclusivos de esta actividad interna.</label>
+              <label for="aceptaReglas">He leído y acepto el <a href="#" data-goto="reglas">reglamento de la polla</a> y autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 (Habeas Data) para efectos exclusivos de esta actividad interna.</label>
             </div>
             <div class="err-msg">Debes aceptar el reglamento para continuar.</div>
           </div>
@@ -525,7 +525,7 @@ footer b{color:var(--ink-dim);}
 
         <div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap;">
           <button type="submit" class="btn btn-primary">✅ Confirmar inscripción</button>
-          <button type="button" class="btn btn-outline" onclick="abrirLogin()">Ya estoy inscrito, iniciar sesión</button>
+          <button type="button" class="btn btn-outline" data-action="abrir-login">Ya estoy inscrito, iniciar sesión</button>
         </div>
       </form>
     </div>
@@ -650,7 +650,7 @@ footer b{color:var(--ink-dim);}
 <!-- LOGIN MODAL -->
 <div class="modal-bg" id="modalLogin">
   <div class="modal">
-    <button class="modal-close" onclick="cerrarModal('modalLogin')">✕</button>
+    <button class="modal-close" data-action="cerrar-login">✕</button>
     <h3>Ya estoy inscrito</h3>
     <p class="hint" style="margin-bottom:14px;">Ingresa el correo con el que te registraste (en este mismo dispositivo).</p>
     <div class="field">
@@ -658,14 +658,14 @@ footer b{color:var(--ink-dim);}
       <input type="email" id="loginCorreo" placeholder="tucorreo@dominio.com">
       <div class="err-msg" id="loginErr" style="display:block;color:var(--danger);margin-top:8px;"></div>
     </div>
-    <button class="btn btn-primary btn-block" style="margin-top:14px;" onclick="hacerLogin()">Ingresar</button>
+    <button class="btn btn-primary btn-block" style="margin-top:14px;" data-action="hacer-login">Ingresar</button>
   </div>
 </div>
 
 <!-- ADMIN MODAL -->
 <div class="modal-bg" id="modalAdmin">
   <div class="modal" style="max-width:640px;">
-    <button class="modal-close" onclick="cerrarModal('modalAdmin')">✕</button>
+    <button class="modal-close" data-action="cerrar-admin">✕</button>
     <h3>⚙️ Panel del organizador</h3>
     <p class="hint" style="margin-bottom:14px;">Acceso restringido: registra aquí el marcador oficial de cada partido para actualizar puntajes y clasificación.</p>
     <div id="adminGate">
@@ -674,12 +674,12 @@ footer b{color:var(--ink-dim);}
         <input type="password" id="adminPass" placeholder="••••••">
         <div class="err-msg" id="adminErr" style="display:block;color:var(--danger);margin-top:8px;"></div>
       </div>
-      <button class="btn btn-primary btn-block" style="margin-top:12px;" onclick="validarAdmin()">Entrar</button>
+      <button class="btn btn-primary btn-block" style="margin-top:12px;" data-action="validar-admin">Entrar</button>
     </div>
     <div id="adminPanel" style="display:none;">
       <div id="adminPartidos"></div>
       <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
-      <button class="btn btn-outline btn-block" onclick="reiniciarDemo()">🔄 Reiniciar datos de la demo</button>
+      <button class="btn btn-outline btn-block" data-action="reiniciar-demo">🔄 Reiniciar datos de la demo</button>
     </div>
   </div>
 </div>
@@ -1083,7 +1083,7 @@ function miPrediccion(partidoId){ return predicciones.find(p=>p.usuarioId===sesi
 function renderPartidos(){
   const cont = document.getElementById("listaPartidos");
   if(!sesionId){
-    cont.innerHTML = `<div class="empty-state"><div class="big">🔒</div>Debes inscribirte para ver el calendario y registrar tus marcadores.<br><br><button class="btn btn-primary" onclick="goto('registro')">Inscribirme ahora</button></div>`;
+    cont.innerHTML = `<div class="empty-state"><div class="big">🔒</div>Debes inscribirte para ver el calendario y registrar tus marcadores.<br><br><button class="btn btn-primary" data-goto="registro">Inscribirme ahora</button></div>`;
     return;
   }
   cont.innerHTML = "";
@@ -1115,7 +1115,7 @@ function renderPartidos(){
     } else if(bloqueado){
       metaRight = `<span class="pill pill-warn">Cerrado</span>`;
     } else {
-      metaRight = `<button class="btn btn-primary btn-sm" onclick="guardarPronostico('${p.id}')">Guardar</button>`;
+      metaRight = `<button class="btn btn-primary btn-sm" data-guardar-pronostico="${p.id}">Guardar</button>`;
     }
 
     div.innerHTML = `
@@ -1132,7 +1132,7 @@ function renderPartidos(){
         <div class="match-when">🗓️ <b>${cap(fmtFecha.format(new Date(p.fechaISO)))}</b> · ⏰ <b>${fmtHora.format(new Date(p.fechaISO))}</b> (hora Colombia) · <span class="mult-tag">puntaje x${p.mult}</span></div>
         <div class="match-actions">${metaRight}</div>
       </div>
-      ${real ? `<button class="acc-toggle" onclick="toggleAcc('${p.id}')">👀 Ver quiénes acertaron</button><div class="acc-panel" id="acc-${p.id}"><div class="acc-list">${renderAciertos(p)}</div></div>` : ""}
+      ${real ? `<button class="acc-toggle" data-toggle-acc="${p.id}">👀 Ver quiénes acertaron</button><div class="acc-panel" id="acc-${p.id}"><div class="acc-list">${renderAciertos(p)}</div></div>` : ""}
     `;
     cont.appendChild(div);
   });
@@ -1333,7 +1333,7 @@ function renderAdminPartidos(){
         <input type="number" min="0" style="width:50px" id="adm-l-${p.id}" value="${real.l ?? ''}" placeholder="0">
         <span>-</span>
         <input type="number" min="0" style="width:50px" id="adm-v-${p.id}" value="${real.v ?? ''}" placeholder="0">
-        <button class="btn btn-sm btn-primary" onclick="guardarResultado('${p.id}')">Guardar</button>
+        <button class="btn btn-sm btn-primary" data-guardar-resultado="${p.id}">Guardar</button>
       </div>
     </div>`;
   }).join("");
@@ -1365,6 +1365,39 @@ function renderTodo(){
   renderClasificacion();
   renderReglasCalendario();
 }
+
+/* ============================================================
+   CLICS DELEGADOS (un solo listener global, en vez de onclick="" inline
+   — más robusto: funciona igual para botones generados dinámicamente
+   y evita problemas con extensiones/CSP que bloquean atributos inline)
+============================================================ */
+const ACCIONES_SIN_PARAMETRO = {
+  "abrir-login": abrirLogin,
+  "cerrar-login": ()=>cerrarModal("modalLogin"),
+  "cerrar-admin": ()=>cerrarModal("modalAdmin"),
+  "hacer-login": hacerLogin,
+  "validar-admin": validarAdmin,
+  "reiniciar-demo": reiniciarDemo
+};
+document.addEventListener("click", (e)=>{
+  const gotoEl = e.target.closest("[data-goto]");
+  if(gotoEl){ e.preventDefault(); goto(gotoEl.dataset.goto); return; }
+
+  const accEl = e.target.closest("[data-toggle-acc]");
+  if(accEl){ toggleAcc(accEl.dataset.toggleAcc); return; }
+
+  const predEl = e.target.closest("[data-guardar-pronostico]");
+  if(predEl){ guardarPronostico(predEl.dataset.guardarPronostico); return; }
+
+  const resEl = e.target.closest("[data-guardar-resultado]");
+  if(resEl){ guardarResultado(resEl.dataset.guardarResultado); return; }
+
+  const accionEl = e.target.closest("[data-action]");
+  if(accionEl && ACCIONES_SIN_PARAMETRO[accionEl.dataset.action]){
+    ACCIONES_SIN_PARAMETRO[accionEl.dataset.action]();
+  }
+});
+
 (function init(){
   if(sesionId && usuarios.some(u=>u.id===sesionId)){
     document.getElementById("tabPartidos").hidden = false;
