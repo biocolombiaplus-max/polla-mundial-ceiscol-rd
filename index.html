@@ -130,14 +130,14 @@ button{font-family:inherit;}
   color:#F4F6FC;padding:52px 20px 40px;
 }
 .hero::before{
-  content:"";position:absolute;left:50%;top:38%;width:640px;height:640px;
+  content:"";position:absolute;left:50%;top:38%;width:640px;height:640px;pointer-events:none;z-index:0;
   border:1.5px solid rgba(255,255,255,.07);border-radius:50%;transform:translate(-50%,-50%);
 }
 .hero::after{
-  content:"";position:absolute;left:50%;top:38%;width:1180px;height:1;
+  content:"";position:absolute;left:50%;top:38%;width:1180px;height:1px;pointer-events:none;z-index:0;
   background:rgba(255,255,255,.06);transform:translate(-50%,-50%);
 }
-.hero-inner{position:relative;max-width:1080px;margin:0 auto;text-align:center;}
+.hero-inner{position:relative;z-index:1;max-width:1080px;margin:0 auto;text-align:center;}
 .eyebrow{
   display:inline-flex;align-items:center;gap:8px;background:rgba(242,183,5,.12);
   border:1px solid rgba(242,183,5,.35);color:var(--gold-fill);
