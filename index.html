@@ -266,6 +266,8 @@ input.err,select.err{border-color:var(--danger);}
 .match-body{display:flex;align-items:center;justify-content:center;gap:22px;flex-wrap:wrap;padding:6px 0 18px;}
 .team{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:112px;}
 .team .flag{font-size:38px;line-height:1;}
+.flagicon{width:1.5em;height:1em;display:inline-block;vertical-align:-0.15em;border-radius:3px;box-shadow:0 0 0 1px rgba(11,18,32,.18) inset;flex-shrink:0;margin-right:2px;}
+.flagicon-square{width:1em;}
 .team .name{font-size:13.5px;font-weight:700;text-align:center;line-height:1.25;max-width:150px;}
 .team .code{font-family:var(--font-display);font-stretch:condensed;font-size:11px;letter-spacing:.08em;color:var(--ink-faint);}
 .vs-block{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:90px;}
@@ -730,16 +732,16 @@ const DEPARTAMENTOS = {
 const PARTIDOS = [
   { id:"qf1", fase:"Cuartos de Final", mult:1, sede:"Gillette Stadium · Boston/Foxborough",
     fechaISO:"2026-07-09T15:00:00-05:00",
-    local:{nombre:"Francia", code:"FRA", flag:"🇫🇷"}, visitante:{nombre:"Marruecos", code:"MAR", flag:"🇲🇦"} },
+    local:{nombre:"Francia", code:"FRA", iso:"FR"}, visitante:{nombre:"Marruecos", code:"MAR", iso:"MA"} },
   { id:"qf2", fase:"Cuartos de Final", mult:1, sede:"SoFi Stadium · Los Ángeles",
     fechaISO:"2026-07-10T14:00:00-05:00",
-    local:{nombre:"España", code:"ESP", flag:"🇪🇸"}, visitante:{nombre:"Bélgica", code:"BEL", flag:"🇧🇪"} },
+    local:{nombre:"España", code:"ESP", iso:"ES"}, visitante:{nombre:"Bélgica", code:"BEL", iso:"BE"} },
   { id:"qf3", fase:"Cuartos de Final", mult:1, sede:"Hard Rock Stadium · Miami",
     fechaISO:"2026-07-11T16:00:00-05:00",
-    local:{nombre:"Noruega", code:"NOR", flag:"🇳🇴"}, visitante:{nombre:"Inglaterra", code:"ENG", flag:"🏴"} },
+    local:{nombre:"Noruega", code:"NOR", iso:"NO"}, visitante:{nombre:"Inglaterra", code:"ENG", iso:"ENG"} },
   { id:"qf4", fase:"Cuartos de Final", mult:1, sede:"Arrowhead Stadium · Kansas City", porDefinir:true,
     fechaISO:"2026-07-11T20:00:00-05:00",
-    local:{nombre:"Argentina / Egipto", code:"ARG/EGY", flag:"🇦🇷🇪🇬"}, visitante:{nombre:"Suiza / Colombia", code:"SUI/COL", flag:"🇨🇭🇨🇴"} },
+    local:{nombre:"Argentina / Egipto", code:"ARG/EGY", iso:["AR","EG"]}, visitante:{nombre:"Suiza / Colombia", code:"SUI/COL", iso:["CH","CO"]} },
   { id:"sf1", fase:"Semifinal", mult:2, sede:"AT&T Stadium · Arlington", porDefinir:true,
     fechaISO:"2026-07-14T14:00:00-05:00",
     local:{nombre:"Ganador CF1", code:"GCF1", flag:"🏆"}, visitante:{nombre:"Ganador CF2", code:"GCF2", flag:"🏆"} },
@@ -753,6 +755,29 @@ const PARTIDOS = [
     fechaISO:"2026-07-19T14:00:00-05:00",
     local:{nombre:"Ganador SF1", code:"GSF1", flag:"🏆"}, visitante:{nombre:"Ganador SF2", code:"GSF2", flag:"🏆"} }
 ];
+
+/* ============================================================
+   BANDERAS EN SVG (no dependen de la fuente emoji del sistema —
+   en Windows los emoji de bandera suelen verse como "FR", "MA", etc.)
+============================================================ */
+const FLAG_SVG = {
+  FR: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="1" height="2" fill="#0055A4"/><rect x="1" width="1" height="2" fill="#fff"/><rect x="2" width="1" height="2" fill="#EF4135"/></svg>',
+  MA: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="2" fill="#C1272D"/><polygon points="1.5,0.45 1.629,0.822 2.023,0.83 1.709,1.068 1.823,1.445 1.5,1.22 1.177,1.445 1.291,1.068 0.977,0.83 1.371,0.822" fill="none" stroke="#006233" stroke-width="0.07"/></svg>',
+  ES: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="0.5" fill="#AA151B"/><rect y="0.5" width="3" height="1" fill="#F1BF00"/><rect y="1.5" width="3" height="0.5" fill="#AA151B"/></svg>',
+  BE: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="1" height="2" fill="#000"/><rect x="1" width="1" height="2" fill="#FDDA24"/><rect x="2" width="1" height="2" fill="#EF3340"/></svg>',
+  NO: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="2" fill="#BA0C2F"/><rect x="0.9" width="0.4" height="2" fill="#fff"/><rect y="0.8" width="3" height="0.4" fill="#fff"/><rect x="1" width="0.2" height="2" fill="#00205B"/><rect y="0.9" width="3" height="0.2" fill="#00205B"/></svg>',
+  ENG: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="2" fill="#fff"/><rect x="1.25" width="0.5" height="2" fill="#CE1124"/><rect y="0.75" width="3" height="0.5" fill="#CE1124"/></svg>',
+  AR: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="0.667" fill="#74ACDF"/><rect y="0.667" width="3" height="0.666" fill="#fff"/><rect y="1.333" width="3" height="0.667" fill="#74ACDF"/><circle cx="1.5" cy="1" r="0.26" fill="#F6B40E" stroke="#85340A" stroke-width="0.03"/></svg>',
+  EG: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="0.667" fill="#CE1126"/><rect y="0.667" width="3" height="0.666" fill="#fff"/><rect y="1.333" width="3" height="0.667" fill="#000"/><circle cx="1.5" cy="1" r="0.22" fill="#C09300"/></svg>',
+  CH: '<svg viewBox="0 0 20 20" class="flagicon flagicon-square"><rect width="20" height="20" fill="#D52B1E"/><rect x="8" y="4" width="4" height="12" fill="#fff"/><rect x="4" y="8" width="12" height="4" fill="#fff"/></svg>',
+  CO: '<svg viewBox="0 0 3 2" class="flagicon"><rect width="3" height="1" fill="#FCD116"/><rect y="1" width="3" height="0.5" fill="#003893"/><rect y="1.5" width="3" height="0.5" fill="#CE1126"/></svg>'
+};
+function renderFlag(team){
+  if(!team) return "";
+  if(Array.isArray(team.iso)) return team.iso.map(c=>FLAG_SVG[c]||"").join("");
+  if(team.iso) return FLAG_SVG[team.iso] || team.flag || "";
+  return team.flag || "";
+}
 const ADMIN_PASS = "MUNDIAL2026";
 
 /* ============================================================
@@ -1016,9 +1041,9 @@ function renderHeroNext(){
   box.innerHTML = `
     <div class="hero-next-label">Próximo partido · ${p.fase}</div>
     <div class="hero-next-match">
-      <div class="hn-team"><span class="hn-flag">${p.local.flag}</span>${p.local.nombre} <span class="hn-code">${p.local.code}</span></div>
+      <div class="hn-team"><span class="hn-flag">${renderFlag(p.local)}</span>${p.local.nombre} <span class="hn-code">${p.local.code}</span></div>
       <div class="hn-vs">VS</div>
-      <div class="hn-team"><span class="hn-flag">${p.visitante.flag}</span>${p.visitante.nombre} <span class="hn-code">${p.visitante.code}</span></div>
+      <div class="hn-team"><span class="hn-flag">${renderFlag(p.visitante)}</span>${p.visitante.nombre} <span class="hn-code">${p.visitante.code}</span></div>
     </div>
     <div class="countdown" id="cdBoxes"></div>
   `;
@@ -1099,9 +1124,9 @@ function renderPartidos(){
         <span class="match-venue">📍 ${p.sede}</span>
       </div>
       <div class="match-body">
-        <div class="team"><span class="flag">${p.local.flag}</span><span class="name">${p.local.nombre}</span><span class="code">${p.local.code}</span></div>
+        <div class="team"><span class="flag">${renderFlag(p.local)}</span><span class="name">${p.local.nombre}</span><span class="code">${p.local.code}</span></div>
         <div class="vs-block"><span class="vs-label">${real? 'RESULTADO' : (bloqueado? 'CERRADO':'TU MARCADOR')}</span>${cuerpoScore}</div>
-        <div class="team"><span class="flag">${p.visitante.flag}</span><span class="name">${p.visitante.nombre}</span><span class="code">${p.visitante.code}</span></div>
+        <div class="team"><span class="flag">${renderFlag(p.visitante)}</span><span class="name">${p.visitante.nombre}</span><span class="code">${p.visitante.code}</span></div>
       </div>
       <div class="match-meta">
         <div class="match-when">🗓️ <b>${cap(fmtFecha.format(new Date(p.fechaISO)))}</b> · ⏰ <b>${fmtHora.format(new Date(p.fechaISO))}</b> (hora Colombia) · <span class="mult-tag">puntaje x${p.mult}</span></div>
@@ -1180,7 +1205,7 @@ function renderMiPolla(){
       <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
         <div>
           <div class="match-phase" style="font-size:12px;">${p.fase}</div>
-          <div style="font-size:14px;font-weight:700;margin-top:2px;">${p.local.flag} ${p.local.nombre} vs ${p.visitante.nombre} ${p.visitante.flag}</div>
+          <div style="font-size:14px;font-weight:700;margin-top:2px;">${renderFlag(p.local)} ${p.local.nombre} vs ${p.visitante.nombre} ${renderFlag(p.visitante)}</div>
           <div style="font-size:12px;color:var(--ink-faint);margin-top:2px;">${cap(fmtFecha.format(new Date(p.fechaISO)))} · ${fmtHora.format(new Date(p.fechaISO))}</div>
         </div>
         <div style="text-align:right;">${estado}${real? `<div style="font-size:12px;color:var(--ink-faint);margin-top:6px;">Resultado: ${real.l}-${real.v}</div>`:''}</div>
@@ -1249,7 +1274,7 @@ function renderReglasCalendario(){
   const cont = document.getElementById("reglasCalendarioMini");
   cont.innerHTML = PARTIDOS.map(p=>`
     <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--border);font-size:13px;flex-wrap:wrap;gap:6px;">
-      <span><b>${p.fase}</b> — ${p.local.flag} ${p.local.nombre} vs ${p.visitante.nombre} ${p.visitante.flag}</span>
+      <span><b>${p.fase}</b> — ${renderFlag(p.local)} ${p.local.nombre} vs ${p.visitante.nombre} ${renderFlag(p.visitante)}</span>
       <span class="tabular" style="color:var(--ink-dim)">${cap(fmtFecha.format(new Date(p.fechaISO)))} · ${fmtHora.format(new Date(p.fechaISO))} COL</span>
     </div>`).join("");
 }
@@ -1303,7 +1328,7 @@ function renderAdminPartidos(){
     const real = resultados[p.id] || {};
     return `
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--border);flex-wrap:wrap;">
-      <span style="font-size:13px;">${p.local.flag} ${p.local.nombre} <span style="color:var(--ink-faint)">vs</span> ${p.visitante.nombre} ${p.visitante.flag}</span>
+      <span style="font-size:13px;">${renderFlag(p.local)} ${p.local.nombre} <span style="color:var(--ink-faint)">vs</span> ${p.visitante.nombre} ${renderFlag(p.visitante)}</span>
       <div style="display:flex;gap:6px;align-items:center;">
         <input type="number" min="0" style="width:50px" id="adm-l-${p.id}" value="${real.l ?? ''}" placeholder="0">
         <span>-</span>
