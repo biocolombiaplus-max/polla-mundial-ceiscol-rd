@@ -189,7 +189,7 @@ button{font-family:inherit;}
 .btn[disabled]{opacity:.5;cursor:not-allowed;}
 
 /* ---------- MAIN LAYOUT ---------- */
-main{max-width:1080px;margin:0 auto;padding:34px 20px 90px;}
+main{max-width:1080px;margin:0 auto;padding:34px 20px 90px;scroll-margin-top:64px;}
 .view{display:none;}
 .view.active{display:block;animation:fadeUp .35s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
@@ -407,7 +407,7 @@ footer b{color:var(--ink-dim);}
   </div>
 </section>
 
-<main>
+<main id="main">
 
   <!-- ============ INICIO ============ -->
   <div class="view active" id="view-inicio">
@@ -848,7 +848,7 @@ function goto(view){
   document.getElementById("view-"+view).classList.add("active");
   const btn = document.querySelector(`.tab-btn[data-view="${view}"]`);
   if(btn) btn.classList.add("active");
-  window.scrollTo({top:0, behavior:"smooth"});
+  document.getElementById("main").scrollIntoView({behavior:"smooth", block:"start"});
 }
 document.getElementById("tabs").addEventListener("click", e=>{
   const b = e.target.closest(".tab-btn");
