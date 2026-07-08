@@ -477,8 +477,13 @@ footer b{color:var(--ink-dim);}
           </div>
           <div class="field">
             <label for="cargo">Cargo / área</label>
-            <input type="text" id="cargo" placeholder="Ej. Bacterióloga, Gerente comercial...">
-            <div class="err-msg">Escribe tu cargo.</div>
+            <select id="cargo">
+              <option value="">Selecciona tu cargo…</option>
+              <option value="Bacteriólogo(a)">Bacteriólogo(a)</option>
+              <option value="Auxiliar de laboratorio">Auxiliar de laboratorio</option>
+              <option value="Personal administrativo del laboratorio clínico">Personal administrativo del laboratorio clínico</option>
+            </select>
+            <div class="err-msg">Selecciona tu cargo.</div>
           </div>
 
           <div class="field">
