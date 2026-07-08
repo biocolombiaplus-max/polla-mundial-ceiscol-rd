@@ -236,15 +236,6 @@ input:focus,select:focus{border-color:var(--gold-fill);box-shadow:0 0 0 3px rgba
 input.err,select.err{border-color:var(--danger);}
 .err-msg{color:var(--danger);font-size:11.5px;margin-top:5px;display:none;}
 .field.invalid .err-msg{display:block;}
-.radio-row{display:flex;gap:10px;flex-wrap:wrap;}
-.radio-card{
-  flex:1;min-width:130px;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;
-  cursor:pointer;display:flex;align-items:center;gap:10px;background:var(--surface-2);transition:border-color .12s,background .12s;
-}
-.radio-card input{width:auto;accent-color:var(--gold-fill);}
-.radio-card.sel-ceiscol.checked{border-color:var(--azure);background:color-mix(in srgb,var(--azure) 10%,var(--surface-2));}
-.radio-card.sel-rd.checked{border-color:var(--scarlet);background:color-mix(in srgb,var(--scarlet) 10%,var(--surface-2));}
-.radio-card .swatch{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
 .check-row{display:flex;gap:10px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:14px;}
 .check-row input{margin-top:3px;width:auto;accent-color:var(--gold-fill);}
 .check-row label{text-transform:none;font-size:13px;color:var(--ink);letter-spacing:0;font-weight:500;margin:0;}
@@ -306,11 +297,6 @@ input.err,select.err{border-color:var(--danger);}
 .acc-item b{font-family:var(--font-mono);color:var(--ok);}
 
 /* ---------- LEADERBOARD ---------- */
-.battle{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:22px;}
-.battle-heads{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:10px;}
-.battle-bar{height:14px;border-radius:999px;overflow:hidden;display:flex;background:var(--surface-2);border:1px solid var(--border);}
-.battle-bar .fill-c{background:var(--azure);}
-.battle-bar .fill-r{background:var(--scarlet);}
 .lb-table{width:100%;border-collapse:collapse;}
 .lb-table th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);padding:0 10px 10px;font-weight:700;}
 .lb-table td{padding:12px 10px;border-top:1px solid var(--border);font-size:14px;}
@@ -323,10 +309,6 @@ input.err,select.err{border-color:var(--danger);}
   .lb-alias{gap:7px;}
   .lb-alias .av{width:24px;height:24px;font-size:12px;}
   .col-exactos{display:none;}
-  .lb-table .pill{padding:3px 7px;font-size:9.5px;}
-}
-@media(max-width:400px){
-  .col-cliente{display:none;}
 }
 .lb-pts{font-family:var(--font-mono);font-weight:800;text-align:right;}
 .medal{font-size:17px;}
@@ -409,11 +391,7 @@ footer b{color:var(--ink-dim);}
   <div class="hero-inner">
     <div class="eyebrow"><span class="dot"></span> Cuartos de Final en adelante · Copa Mundial FIFA 2026</div>
     <h1>Polla Mundialista<span class="line2">CEISCOL S.AS - RD</span></h1>
-    <p class="hero-sub">Pronostica los marcadores desde cuartos de final hasta la gran final. Suma puntos, sube en la tabla y disputa el título entre CEISCOL S.AS y RD — sin exponer un solo dato personal.</p>
-    <div class="hero-clients">
-      <div class="client-chip"><span class="sw" style="background:var(--azure)"></span>CEISCOL S.AS</div>
-      <div class="client-chip"><span class="sw" style="background:var(--scarlet)"></span>RD</div>
-    </div>
+    <p class="hero-sub">Pronostica los marcadores desde cuartos de final hasta la gran final. Suma puntos, sube en la tabla y gánate el título de la polla — sin exponer un solo dato personal.</p>
     <div class="hero-next" id="heroNext"></div>
     <div class="hero-cta">
       <button class="btn btn-primary" data-goto="registro">🏆 Inscribirme a la polla</button>
@@ -461,18 +439,9 @@ footer b{color:var(--ink-dim);}
       <form id="formRegistro" novalidate>
         <div class="form-grid">
           <div class="field full">
-            <label>Perteneces a</label>
-            <div class="radio-row">
-              <label class="radio-card sel-ceiscol" for="clienteCeiscol"><input type="radio" name="cliente" value="Ceiscol" id="clienteCeiscol"><span class="swatch" style="background:var(--azure)"></span>CEISCOL S.AS</label>
-              <label class="radio-card sel-rd" for="clienteRD"><input type="radio" name="cliente" value="RD" id="clienteRD"><span class="swatch" style="background:var(--scarlet)"></span>RD</label>
-            </div>
-            <div class="hint">Solo pueden participar colaboradores, empleados o equipos de los laboratorios/clientes de CEISCOL S.AS o RD.</div>
-            <div class="err-msg">Selecciona CEISCOL S.AS o RD.</div>
-          </div>
-
-          <div class="field full">
             <label for="laboratorio">Nombre del laboratorio o cliente</label>
             <input type="text" id="laboratorio" placeholder="Ej. Laboratorio Clínico Andes">
+            <div class="hint">Solo pueden participar colaboradores, empleados o equipos de los laboratorios/clientes de CEISCOL S.AS - RD.</div>
             <div class="err-msg">Escribe el nombre del laboratorio o cliente.</div>
           </div>
 
@@ -602,7 +571,6 @@ footer b{color:var(--ink-dim);}
         <div class="lb-alias .av" style="width:52px;height:52px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;" id="miAvatar">🦁</div>
         <div>
           <div style="font-weight:800;font-size:17px;" id="miAlias">—</div>
-          <div style="font-size:12.5px;color:var(--ink-faint);" id="miCliente">—</div>
         </div>
       </div>
       <div style="text-align:right;">
@@ -617,18 +585,11 @@ footer b{color:var(--ink-dim);}
   <div class="view" id="view-clasificacion">
     <div class="section-head">
       <h2>Clasificación general</h2>
-      <p>Tabla pública y anónima: solo se muestra alias, avatar, cliente y puntaje. Ningún nombre, correo, WhatsApp o laboratorio se hace público.</p>
-    </div>
-    <div class="battle">
-      <div class="battle-heads">
-        <span style="color:var(--azure)">🔵 CEISCOL S.AS · <span id="ptsCeiscol" class="tabular">0</span> pts</span>
-        <span style="color:var(--scarlet)">RD 🔴 · <span id="ptsRD" class="tabular">0</span> pts</span>
-      </div>
-      <div class="battle-bar"><div class="fill-c" id="barCeiscol" style="width:50%"></div><div class="fill-r" id="barRD" style="width:50%"></div></div>
+      <p>Tabla pública y anónima: solo se muestra alias, avatar y puntaje. Ningún nombre, correo, WhatsApp o laboratorio se hace público.</p>
     </div>
     <div class="card overflow-x">
       <table class="lb-table" id="tablaClasificacion">
-        <thead><tr><th></th><th>Alias</th><th class="col-cliente">Cliente</th><th class="col-exactos" style="text-align:right">Exactos</th><th style="text-align:right">Puntos</th></tr></thead>
+        <thead><tr><th></th><th>Alias</th><th class="col-exactos" style="text-align:right">Exactos</th><th style="text-align:right">Puntos</th></tr></thead>
         <tbody id="lbBody"></tbody>
       </table>
       <div class="empty-state" id="lbEmpty" style="display:none;">
@@ -658,14 +619,14 @@ footer b{color:var(--ink-dim);}
         <ul class="rules-list">
           <li><div class="ico">📈</div><div class="txt"><b>Gana quien acumule más puntos</b><span>Sumando todos los partidos, desde cuartos de final hasta la gran final.</span></div></li>
           <li><div class="ico">🎲</div><div class="txt"><b>Empate en el primer lugar</b><span>Si dos o más participantes terminan empatados en la cima, el ganador se define por sorteo público entre los empatados, transmitido a todos los inscritos.</span></div></li>
-          <li><div class="ico">🕵️</div><div class="txt"><b>Privacidad ante todo</b><span>La tabla de posiciones solo muestra un alias generado automáticamente, un avatar y el cliente (CEISCOL S.AS / RD). Nombre, documento, correo, WhatsApp y laboratorio jamás se muestran en público.</span></div></li>
+          <li><div class="ico">🕵️</div><div class="txt"><b>Privacidad ante todo</b><span>La tabla de posiciones solo muestra un alias generado automáticamente y un avatar. Nombre, documento, correo, WhatsApp y laboratorio jamás se muestran en público.</span></div></li>
         </ul>
       </div>
     </div>
     <div class="card" style="margin-top:16px;">
       <h3 style="font-size:16px;margin-bottom:14px;">✅ Requisitos para participar</h3>
       <ul class="rules-list">
-        <li><div class="ico">🧑‍💼</div><div class="txt"><b>Debes ser colaborador, empleado o parte del equipo de un cliente</b><span>La polla es exclusiva para colaboradores, empleados o equipos de los laboratorios/clientes de CEISCOL S.AS o RD. Si alguien registra a una persona que no cumple esta condición, esa inscripción no será tenida en cuenta para efectos del premio.</span></div></li>
+        <li><div class="ico">🧑‍💼</div><div class="txt"><b>Debes ser colaborador, empleado o parte del equipo de un cliente</b><span>La polla es exclusiva para colaboradores, empleados o equipos de los laboratorios/clientes de CEISCOL S.AS - RD. Si alguien registra a una persona que no cumple esta condición, esa inscripción no será tenida en cuenta para efectos del premio.</span></div></li>
         <li><div class="ico">🏅</div><div class="txt"><b>Si el ganador no cumple los requisitos</b><span>El premio no se declara desierto: pasa a la siguiente persona en la clasificación que sí cumpla con las condiciones de elegibilidad.</span></div></li>
         <li><div class="ico">📷</div><div class="txt"><b>Seguir nuestro Instagram es obligatorio</b><span>Debes seguir la cuenta <a href="https://www.instagram.com/ceiscol/" target="_blank" rel="noopener">@ceiscol</a> para poder participar y reclamar premios. <a class="btn btn-sm btn-outline" style="margin-top:8px;" href="https://www.instagram.com/ceiscol/" target="_blank" rel="noopener">Seguir @ceiscol</a></span></div></li>
       </ul>
@@ -888,7 +849,6 @@ function aliasFor(id){
   return `${a} ${n} #${num}`;
 }
 function avatarFor(id){ return AVATARS[hashStr(id+"a") % AVATARS.length]; }
-function nombreCliente(valor){ return valor==="Ceiscol" ? "CEISCOL S.AS" : valor; }
 
 /* ============================================================
    HELPERS DE FECHA
@@ -949,12 +909,6 @@ selDepto.addEventListener("change", ()=>{
     selCiudad.appendChild(o);
   });
 });
-document.querySelectorAll('input[name="cliente"]').forEach(r=>{
-  r.addEventListener("change", ()=>{
-    document.querySelectorAll(".radio-card").forEach(c=>c.classList.remove("checked"));
-    r.closest(".radio-card").classList.add("checked");
-  });
-});
 
 /* ============================================================
    REGISTRO — validación y envío
@@ -986,7 +940,6 @@ async function registrarEnNube(usuario){
 document.getElementById("formRegistro").addEventListener("submit", async function(e){
   e.preventDefault();
   let ok = true;
-  const cliente = document.querySelector('input[name="cliente"]:checked');
   const fLab = document.getElementById("laboratorio");
   const fNom = document.getElementById("nombres");
   const fApe = document.getElementById("apellidos");
@@ -1001,7 +954,6 @@ document.getElementById("formRegistro").addEventListener("submit", async functio
   const fInstagram = document.getElementById("sigueInstagram");
 
   const checks = [
-    [cliente, cliente?.closest(".field")],
     [fLab.value.trim(), fLab.closest(".field")],
     [fNom.value.trim(), fNom.closest(".field")],
     [fApe.value.trim(), fApe.closest(".field")],
@@ -1033,7 +985,7 @@ document.getElementById("formRegistro").addEventListener("submit", async functio
 
   const id = (crypto.randomUUID ? crypto.randomUUID() : "u"+Date.now()+Math.random());
   const usuario = {
-    id, cliente: cliente.value, laboratorio: fLab.value.trim(),
+    id, laboratorio: fLab.value.trim(),
     nombres: fNom.value.trim(), apellidos: fApe.value.trim(),
     tipoDoc: document.getElementById("tipoDoc").value, numDoc: fDoc.value.trim(),
     fechaNacimiento: fFecha.value, cargo: fCargo.value.trim(),
@@ -1291,7 +1243,6 @@ function renderMiPolla(){
   if(!u) return;
   document.getElementById("miAvatar").textContent = avatarFor(u.id);
   document.getElementById("miAlias").textContent = aliasFor(u.id);
-  document.getElementById("miCliente").innerHTML = `<span class="pill ${u.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${nombreCliente(u.cliente)}</span>`;
   const {total} = totalPuntosUsuario(u.id);
   document.getElementById("miPuntos").textContent = total;
 
@@ -1329,13 +1280,12 @@ function renderMiPolla(){
 function renderClasificacion(){
   const filas = usuarios.map(u=>{
     const {total, exactos} = totalPuntosUsuario(u.id);
-    return {uid:u.id, cliente:u.cliente, total, exactos};
+    return {uid:u.id, total, exactos};
   }).sort((a,b)=>b.total-a.total);
 
   const body = document.getElementById("lbBody");
   const empty = document.getElementById("lbEmpty");
   body.innerHTML = "";
-  if(!filas.length || filas.every(f=>f.total===0 && !usuarios.length)){ /* noop */ }
   if(!usuarios.length){ empty.style.display="block"; }
   else {
     empty.style.display="none";
@@ -1347,7 +1297,6 @@ function renderClasificacion(){
       tr.innerHTML = `
         <td class="lb-rank">${medalla || (i+1)}</td>
         <td><div class="lb-alias"><span class="av">${avatarFor(f.uid)}</span>${aliasFor(f.uid)}</div></td>
-        <td class="col-cliente"><span class="pill ${f.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${nombreCliente(f.cliente)}</span></td>
         <td class="col-exactos tabular" style="text-align:right">${f.exactos}</td>
         <td class="lb-pts tabular">${f.total}</td>
       `;
@@ -1355,19 +1304,10 @@ function renderClasificacion(){
     });
     if(filas.length>1 && filas[0].total>0 && filas[1].total===topScore){
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="5" style="text-align:center;color:var(--warn);font-weight:700;padding:14px;">🎲 Empate en el primer lugar — el ganador se definirá por sorteo público entre los empatados.</td>`;
+      tr.innerHTML = `<td colspan="4" style="text-align:center;color:var(--warn);font-weight:700;padding:14px;">🎲 Empate en el primer lugar — el ganador se definirá por sorteo público entre los empatados.</td>`;
       body.appendChild(tr);
     }
   }
-
-  const totC = filas.filter(f=>f.cliente==='Ceiscol').reduce((s,f)=>s+f.total,0);
-  const totR = filas.filter(f=>f.cliente==='RD').reduce((s,f)=>s+f.total,0);
-  document.getElementById("ptsCeiscol").textContent = totC;
-  document.getElementById("ptsRD").textContent = totR;
-  const suma = totC+totR;
-  const pc = suma? (totC/suma*100) : 50;
-  document.getElementById("barCeiscol").style.width = pc+"%";
-  document.getElementById("barRD").style.width = (100-pc)+"%";
 }
 
 /* ============================================================
