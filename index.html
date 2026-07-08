@@ -198,6 +198,12 @@ main{max-width:1080px;margin:0 auto;padding:34px 20px 90px;scroll-margin-top:64p
 .section-head{margin-bottom:22px;}
 .section-head h2{font-size:clamp(22px,3.4vw,30px);color:var(--ink);}
 .section-head p{color:var(--ink-dim);font-size:14.5px;margin-top:6px;max-width:64ch;line-height:1.6;}
+.aviso-banner{
+  display:flex;gap:10px;align-items:flex-start;background:color-mix(in srgb,var(--ok) 12%,var(--surface));
+  border:1px solid color-mix(in srgb,var(--ok) 35%,var(--border));border-radius:12px;padding:14px 16px;
+  font-size:13.5px;color:var(--ink);line-height:1.55;margin-bottom:16px;
+}
+.aviso-ico{font-size:17px;flex-shrink:0;}
 
 .card{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
@@ -547,6 +553,10 @@ footer b{color:var(--ink-dim);}
       <h2>Calendario y pronósticos</h2>
       <p>Horarios oficiales FIFA convertidos a hora de Colombia (UTC-5). El pronóstico se bloquea 30 minutos antes del pitazo inicial.</p>
     </div>
+    <div id="avisoPartidos"></div>
+    <div id="barraGuardarTodos" style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+      <button class="btn btn-primary" data-action="guardar-todos">💾 Guardar todos los pronósticos</button>
+    </div>
     <div id="listaPartidos"></div>
   </div>
 
@@ -749,9 +759,9 @@ const PARTIDOS = [
   { id:"qf3", fase:"Cuartos de Final", mult:1, sede:"Hard Rock Stadium · Miami",
     fechaISO:"2026-07-11T16:00:00-05:00",
     local:{nombre:"Noruega", code:"NOR", iso:"NO"}, visitante:{nombre:"Inglaterra", code:"ENG", iso:"ENG"} },
-  { id:"qf4", fase:"Cuartos de Final", mult:1, sede:"Arrowhead Stadium · Kansas City", porDefinir:true,
+  { id:"qf4", fase:"Cuartos de Final", mult:1, sede:"Arrowhead Stadium · Kansas City",
     fechaISO:"2026-07-11T20:00:00-05:00",
-    local:{nombre:"Argentina / Egipto", code:"ARG/EGY", iso:["AR","EG"]}, visitante:{nombre:"Suiza / Colombia", code:"SUI/COL", iso:["CH","CO"]} },
+    local:{nombre:"Argentina", code:"ARG", iso:"AR"}, visitante:{nombre:"Suiza", code:"SUI", iso:"CH"} },
   { id:"sf1", fase:"Semifinal", mult:2, sede:"AT&T Stadium · Arlington", porDefinir:true,
     fechaISO:"2026-07-14T14:00:00-05:00",
     local:{nombre:"Ganador CF1", code:"GCF1", flag:"🏆"}, visitante:{nombre:"Ganador CF2", code:"GCF2", flag:"🏆"} },
@@ -796,6 +806,16 @@ const ADMIN_PASS = "MUNDIAL2026";
    Si se deja vacío, la app sigue funcionando en modo local/demo.
 ============================================================ */
 const SHEETS_ENDPOINT = "https://script.google.com/macros/s/AKfycbw3uSx5erU9UI9suiAef6TBfic1wVVLoOAkH7BkkuRPRciip4wy2Um8JsMKiJeNRbL83g/exec";
+
+/* ============================================================
+   AVISO — banner editable para anunciar hitos del torneo
+   (edítalo cuando se confirmen semifinales / final)
+============================================================ */
+const AVISO_ACTUAL = {
+  activo: true,
+  icono: "✅",
+  texto: "¡Ya se confirmaron los cruces de Cuartos de Final! Ingresa los 4 pronósticos que quieras y dale <b>Guardar todos los pronósticos</b>. Recuerda: cada marcador se bloquea 30 minutos antes del inicio de su partido."
+};
 
 /* ============================================================
    STORAGE
@@ -1090,12 +1110,24 @@ function puntosDe(pred, real, mult){
 }
 function miPrediccion(partidoId){ return predicciones.find(p=>p.usuarioId===sesionId && p.partidoId===partidoId); }
 
+function renderAvisoPartidos(){
+  const box = document.getElementById("avisoPartidos");
+  if(!box) return;
+  box.innerHTML = (AVISO_ACTUAL && AVISO_ACTUAL.activo)
+    ? `<div class="aviso-banner"><span class="aviso-ico">${AVISO_ACTUAL.icono}</span><span>${AVISO_ACTUAL.texto}</span></div>`
+    : "";
+}
+
 function renderPartidos(){
+  renderAvisoPartidos();
   const cont = document.getElementById("listaPartidos");
+  const barra = document.getElementById("barraGuardarTodos");
   if(!sesionId){
+    if(barra) barra.style.display = "none";
     cont.innerHTML = `<div class="empty-state"><div class="big">🔒</div>Debes inscribirte para ver el calendario y registrar tus marcadores.<br><br><button class="btn btn-primary" data-goto="registro">Inscribirme ahora</button></div>`;
     return;
   }
+  if(barra) barra.style.display = "flex";
   cont.innerHTML = "";
   PARTIDOS.forEach(p=>{
     const real = resultados[p.id];
@@ -1157,17 +1189,42 @@ function renderAciertos(p){
   if(!conPts.length) return `<span class="hint">Nadie acertó este partido.</span>`;
   return conPts.map(x=>`<span class="acc-item"><span class="av">${avatarFor(x.uid)}</span>${aliasFor(x.uid)} <b>+${x.pts}</b></span>`).join("");
 }
+function guardarPronosticoValor(partidoId, l, v){
+  const existente = miPrediccion(partidoId);
+  if(existente){ existente.l=l; existente.v=v; existente.fecha=new Date().toISOString(); }
+  else { predicciones.push({usuarioId:sesionId, partidoId, l, v, fecha:new Date().toISOString()}); }
+}
+
 function guardarPronostico(partidoId){
   const l = parseInt(document.getElementById("in-l-"+partidoId).value, 10);
   const v = parseInt(document.getElementById("in-v-"+partidoId).value, 10);
   if(isNaN(l) || isNaN(v) || l<0 || v<0){ toast("Ingresa un marcador válido para ambos equipos","⚠️"); return; }
   const partido = PARTIDOS.find(p=>p.id===partidoId);
   if(estaBloqueado(partido)){ toast("Ya se cerró el pronóstico de este partido","🔒"); renderTodo(); return; }
-  const existente = miPrediccion(partidoId);
-  if(existente){ existente.l=l; existente.v=v; existente.fecha=new Date().toISOString(); }
-  else { predicciones.push({usuarioId:sesionId, partidoId, l, v, fecha:new Date().toISOString()}); }
+  guardarPronosticoValor(partidoId, l, v);
   saveLS(LS.predicciones, predicciones);
   toast("Pronóstico guardado ✅");
+  renderTodo();
+}
+
+function guardarTodosPronosticos(){
+  if(!sesionId) return;
+  let guardados = 0;
+  PARTIDOS.forEach(p=>{
+    if(resultados[p.id]) return;
+    const inputL = document.getElementById("in-l-"+p.id);
+    const inputV = document.getElementById("in-v-"+p.id);
+    if(!inputL || !inputV) return;
+    const l = parseInt(inputL.value, 10);
+    const v = parseInt(inputV.value, 10);
+    if(isNaN(l) || isNaN(v) || l<0 || v<0) return;
+    if(estaBloqueado(p)) return;
+    guardarPronosticoValor(p.id, l, v);
+    guardados++;
+  });
+  if(guardados===0){ toast("Llena al menos un marcador para guardar","⚠️"); return; }
+  saveLS(LS.predicciones, predicciones);
+  toast(`${guardados} pronóstico${guardados===1?'':'s'} guardado${guardados===1?'':'s'} ✅`,"🏆");
   renderTodo();
 }
 
@@ -1387,7 +1444,8 @@ const ACCIONES_SIN_PARAMETRO = {
   "cerrar-admin": ()=>cerrarModal("modalAdmin"),
   "hacer-login": hacerLogin,
   "validar-admin": validarAdmin,
-  "reiniciar-demo": reiniciarDemo
+  "reiniciar-demo": reiniciarDemo,
+  "guardar-todos": guardarTodosPronosticos
 };
 document.addEventListener("click", (e)=>{
   const gotoEl = e.target.closest("[data-goto]");
