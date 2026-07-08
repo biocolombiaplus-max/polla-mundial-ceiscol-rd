@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>Polla Mundialista 2026 · Ceiscol &amp; RD</title>
-<meta name="description" content="Polla mundialista oficial Ceiscol &amp; RD — Copa Mundial de la FIFA 2026, desde Cuartos de Final.">
+<title>Polla Mundialista 2026 · CEISCOL S.AS - RD</title>
+<meta name="description" content="Polla mundialista oficial CEISCOL S.AS - RD — Copa Mundial de la FIFA 2026, desde Cuartos de Final.">
 <style>
 :root{
   --bg:#EEF1F7;
@@ -249,6 +249,15 @@ input.err,select.err{border-color:var(--danger);}
 .check-row input{margin-top:3px;width:auto;accent-color:var(--gold-fill);}
 .check-row label{text-transform:none;font-size:13px;color:var(--ink);letter-spacing:0;font-weight:500;margin:0;}
 .check-row a{color:var(--gold);font-weight:700;text-decoration:underline;}
+.ig-card{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  background:linear-gradient(135deg,#4f5bd5,#962fbf,#d62976,#fa7e1e,#feda75);
+  border-radius:12px;padding:14px 16px;color:#fff;
+}
+.ig-text{display:flex;align-items:center;gap:12px;}
+.ig-badge{font-size:20px;background:rgba(255,255,255,.22);width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ig-text b{display:block;font-size:14px;}
+.ig-text span{font-size:12px;opacity:.92;}
 
 /* ---------- BADGES / PILLS ---------- */
 .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
@@ -382,7 +391,7 @@ footer b{color:var(--ink-dim);}
       <div class="brand-badge">⚽</div>
       <div class="brand-text">
         <div class="k">Polla Mundialista</div>
-        <div class="s">Ceiscol &amp; RD · FIFA 2026</div>
+        <div class="s">CEISCOL S.AS - RD · FIFA 2026</div>
       </div>
     </div>
     <nav class="tabs" id="tabs">
@@ -399,10 +408,10 @@ footer b{color:var(--ink-dim);}
 <section class="hero">
   <div class="hero-inner">
     <div class="eyebrow"><span class="dot"></span> Cuartos de Final en adelante · Copa Mundial FIFA 2026</div>
-    <h1>Polla Mundialista<span class="line2">Ceiscol &amp; RD</span></h1>
-    <p class="hero-sub">Pronostica los marcadores desde cuartos de final hasta la gran final. Suma puntos, sube en la tabla y disputa el título entre Ceiscol y RD — sin exponer un solo dato personal.</p>
+    <h1>Polla Mundialista<span class="line2">CEISCOL S.AS - RD</span></h1>
+    <p class="hero-sub">Pronostica los marcadores desde cuartos de final hasta la gran final. Suma puntos, sube en la tabla y disputa el título entre CEISCOL S.AS y RD — sin exponer un solo dato personal.</p>
     <div class="hero-clients">
-      <div class="client-chip"><span class="sw" style="background:var(--azure)"></span>Ceiscol</div>
+      <div class="client-chip"><span class="sw" style="background:var(--azure)"></span>CEISCOL S.AS</div>
       <div class="client-chip"><span class="sw" style="background:var(--scarlet)"></span>RD</div>
     </div>
     <div class="hero-next" id="heroNext"></div>
@@ -446,7 +455,7 @@ footer b{color:var(--ink-dim);}
   <div class="view" id="view-registro">
     <div class="section-head">
       <h2>Formulario de inscripción</h2>
-      <p>Diligencia tus datos una única vez para participar en la polla mundialista Ceiscol &amp; RD. Tus datos de contacto son privados: en la clasificación pública solo aparece un alias.</p>
+      <p>Diligencia tus datos una única vez para participar en la polla mundialista CEISCOL S.AS - RD. Tus datos de contacto son privados: en la clasificación pública solo aparece un alias.</p>
     </div>
     <div class="card" id="registroCard">
       <form id="formRegistro" novalidate>
@@ -454,10 +463,11 @@ footer b{color:var(--ink-dim);}
           <div class="field full">
             <label>Perteneces a</label>
             <div class="radio-row">
-              <label class="radio-card sel-ceiscol" for="clienteCeiscol"><input type="radio" name="cliente" value="Ceiscol" id="clienteCeiscol"><span class="swatch" style="background:var(--azure)"></span>Ceiscol</label>
+              <label class="radio-card sel-ceiscol" for="clienteCeiscol"><input type="radio" name="cliente" value="Ceiscol" id="clienteCeiscol"><span class="swatch" style="background:var(--azure)"></span>CEISCOL S.AS</label>
               <label class="radio-card sel-rd" for="clienteRD"><input type="radio" name="cliente" value="RD" id="clienteRD"><span class="swatch" style="background:var(--scarlet)"></span>RD</label>
             </div>
-            <div class="err-msg">Selecciona Ceiscol o RD.</div>
+            <div class="hint">Solo pueden participar colaboradores, empleados o equipos de los laboratorios/clientes de CEISCOL S.AS o RD.</div>
+            <div class="err-msg">Selecciona CEISCOL S.AS o RD.</div>
           </div>
 
           <div class="field full">
@@ -531,9 +541,30 @@ footer b{color:var(--ink-dim);}
           </div>
 
           <div class="field full">
+            <div class="ig-card">
+              <div class="ig-text">
+                <span class="ig-badge">📷</span>
+                <div>
+                  <b>Síguenos en Instagram</b>
+                  <span>Es un requisito para participar — entérate de resultados y novedades.</span>
+                </div>
+              </div>
+              <a class="btn btn-sm" style="background:#fff;color:#C13584;flex-shrink:0;" href="https://www.instagram.com/ceiscol/" target="_blank" rel="noopener">Seguir @ceiscol</a>
+            </div>
+          </div>
+
+          <div class="field full">
+            <div class="check-row">
+              <input type="checkbox" id="sigueInstagram">
+              <label for="sigueInstagram">Ya sigo la cuenta de Instagram <a href="https://www.instagram.com/ceiscol/" target="_blank" rel="noopener">@ceiscol</a>.</label>
+            </div>
+            <div class="err-msg">Debes seguirnos en Instagram para participar.</div>
+          </div>
+
+          <div class="field full">
             <div class="check-row">
               <input type="checkbox" id="aceptaReglas">
-              <label for="aceptaReglas">He leído y acepto el <a href="#" data-goto="reglas">reglamento de la polla</a> y autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 (Habeas Data) para efectos exclusivos de esta actividad interna.</label>
+              <label for="aceptaReglas">He leído y acepto el <a href="#" data-goto="reglas">reglamento de la polla</a> (incluyendo los requisitos de elegibilidad) y autorizo el tratamiento de mis datos personales conforme a la Ley 1581 de 2012 (Habeas Data) para efectos exclusivos de esta actividad interna.</label>
             </div>
             <div class="err-msg">Debes aceptar el reglamento para continuar.</div>
           </div>
@@ -590,7 +621,7 @@ footer b{color:var(--ink-dim);}
     </div>
     <div class="battle">
       <div class="battle-heads">
-        <span style="color:var(--azure)">🔵 Ceiscol · <span id="ptsCeiscol" class="tabular">0</span> pts</span>
+        <span style="color:var(--azure)">🔵 CEISCOL S.AS · <span id="ptsCeiscol" class="tabular">0</span> pts</span>
         <span style="color:var(--scarlet)">RD 🔴 · <span id="ptsRD" class="tabular">0</span> pts</span>
       </div>
       <div class="battle-bar"><div class="fill-c" id="barCeiscol" style="width:50%"></div><div class="fill-r" id="barRD" style="width:50%"></div></div>
@@ -627,9 +658,17 @@ footer b{color:var(--ink-dim);}
         <ul class="rules-list">
           <li><div class="ico">📈</div><div class="txt"><b>Gana quien acumule más puntos</b><span>Sumando todos los partidos, desde cuartos de final hasta la gran final.</span></div></li>
           <li><div class="ico">🎲</div><div class="txt"><b>Empate en el primer lugar</b><span>Si dos o más participantes terminan empatados en la cima, el ganador se define por sorteo público entre los empatados, transmitido a todos los inscritos.</span></div></li>
-          <li><div class="ico">🕵️</div><div class="txt"><b>Privacidad ante todo</b><span>La tabla de posiciones solo muestra un alias generado automáticamente, un avatar y el cliente (Ceiscol/RD). Nombre, documento, correo, WhatsApp y laboratorio jamás se muestran en público.</span></div></li>
+          <li><div class="ico">🕵️</div><div class="txt"><b>Privacidad ante todo</b><span>La tabla de posiciones solo muestra un alias generado automáticamente, un avatar y el cliente (CEISCOL S.AS / RD). Nombre, documento, correo, WhatsApp y laboratorio jamás se muestran en público.</span></div></li>
         </ul>
       </div>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3 style="font-size:16px;margin-bottom:14px;">✅ Requisitos para participar</h3>
+      <ul class="rules-list">
+        <li><div class="ico">🧑‍💼</div><div class="txt"><b>Debes ser colaborador, empleado o parte del equipo de un cliente</b><span>La polla es exclusiva para colaboradores, empleados o equipos de los laboratorios/clientes de CEISCOL S.AS o RD. Si alguien registra a una persona que no cumple esta condición, esa inscripción no será tenida en cuenta para efectos del premio.</span></div></li>
+        <li><div class="ico">🏅</div><div class="txt"><b>Si el ganador no cumple los requisitos</b><span>El premio no se declara desierto: pasa a la siguiente persona en la clasificación que sí cumpla con las condiciones de elegibilidad.</span></div></li>
+        <li><div class="ico">📷</div><div class="txt"><b>Seguir nuestro Instagram es obligatorio</b><span>Debes seguir la cuenta <a href="https://www.instagram.com/ceiscol/" target="_blank" rel="noopener">@ceiscol</a> para poder participar y reclamar premios. <a class="btn btn-sm btn-outline" style="margin-top:8px;" href="https://www.instagram.com/ceiscol/" target="_blank" rel="noopener">Seguir @ceiscol</a></span></div></li>
+      </ul>
     </div>
     <div class="card" style="margin-top:16px;">
       <h3 style="font-size:16px;margin-bottom:6px;">🔢 Sistema de puntos</h3>
@@ -660,7 +699,7 @@ footer b{color:var(--ink-dim);}
 
 <footer>
   <div class="container">
-    Polla mundialista interna de <b>Ceiscol</b> y <b>RD</b> — sin fines de lucro, uso exclusivo entre clientes y colaboradores invitados.<br>
+    Polla mundialista interna de <b>CEISCOL S.AS</b> y <b>RD</b> — sin fines de lucro, uso exclusivo entre clientes y colaboradores invitados.<br>
     Horarios con base en el calendario oficial FIFA Copa Mundial 2026™, convertidos a hora de Colombia (UTC-5). FIFA y la Copa Mundial son marcas de sus respectivos titulares; esta polla no está afiliada ni respaldada por la FIFA.
   </div>
 </footer>
@@ -849,6 +888,7 @@ function aliasFor(id){
   return `${a} ${n} #${num}`;
 }
 function avatarFor(id){ return AVATARS[hashStr(id+"a") % AVATARS.length]; }
+function nombreCliente(valor){ return valor==="Ceiscol" ? "CEISCOL S.AS" : valor; }
 
 /* ============================================================
    HELPERS DE FECHA
@@ -958,6 +998,7 @@ document.getElementById("formRegistro").addEventListener("submit", async functio
   const fWpp = document.getElementById("whatsapp");
   const fCorreo = document.getElementById("correo");
   const fAcepta = document.getElementById("aceptaReglas");
+  const fInstagram = document.getElementById("sigueInstagram");
 
   const checks = [
     [cliente, cliente?.closest(".field")],
@@ -970,6 +1011,7 @@ document.getElementById("formRegistro").addEventListener("submit", async functio
     [fCiudad.value, fCiudad.closest(".field")],
     [/^[0-9\s+]{7,15}$/.test(fWpp.value.trim()), fWpp.closest(".field")],
     [/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fCorreo.value.trim()), fCorreo.closest(".field")],
+    [fInstagram.checked, fInstagram.closest(".field")],
     [fAcepta.checked, fAcepta.closest(".field")]
   ];
   let edadOk = true;
@@ -1249,7 +1291,7 @@ function renderMiPolla(){
   if(!u) return;
   document.getElementById("miAvatar").textContent = avatarFor(u.id);
   document.getElementById("miAlias").textContent = aliasFor(u.id);
-  document.getElementById("miCliente").innerHTML = `<span class="pill ${u.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${u.cliente}</span>`;
+  document.getElementById("miCliente").innerHTML = `<span class="pill ${u.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${nombreCliente(u.cliente)}</span>`;
   const {total} = totalPuntosUsuario(u.id);
   document.getElementById("miPuntos").textContent = total;
 
@@ -1305,7 +1347,7 @@ function renderClasificacion(){
       tr.innerHTML = `
         <td class="lb-rank">${medalla || (i+1)}</td>
         <td><div class="lb-alias"><span class="av">${avatarFor(f.uid)}</span>${aliasFor(f.uid)}</div></td>
-        <td class="col-cliente"><span class="pill ${f.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${f.cliente}</span></td>
+        <td class="col-cliente"><span class="pill ${f.cliente==='Ceiscol'?'pill-azure':'pill-scarlet'}">${nombreCliente(f.cliente)}</span></td>
         <td class="col-exactos tabular" style="text-align:right">${f.exactos}</td>
         <td class="lb-pts tabular">${f.total}</td>
       `;
