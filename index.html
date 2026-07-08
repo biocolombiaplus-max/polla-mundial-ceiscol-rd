@@ -422,7 +422,7 @@ footer b{color:var(--ink-dim);}
       </div>
       <div class="card">
         <h3 style="font-size:17px;margin-bottom:10px;">🔔 Recordatorio de cierre</h3>
-        <p style="font-size:13.5px;color:var(--ink-dim);line-height:1.6;margin-bottom:14px;">Te avisamos al correo registrado <b>una hora antes</b> del inicio de cada partido para que no se te pase la hora de registrar tu marcador. Puedes además activar un aviso en este navegador como recordatorio inmediato.</p>
+        <p style="font-size:13.5px;color:var(--ink-dim);line-height:1.6;margin-bottom:14px;">Si aún no has registrado tu marcador, te avisamos al correo registrado <b>una hora antes de que se bloquee el partido</b> (30 min antes del inicio). Puedes además activar un aviso en este navegador como recordatorio inmediato.</p>
         <button class="btn btn-outline btn-block" id="btnNotif">🔔 Activar recordatorio en este navegador</button>
         <p class="hint" id="notifStatus" style="margin-top:10px;"></p>
       </div>
@@ -652,7 +652,7 @@ footer b{color:var(--ink-dim);}
     </div>
     <div class="card" style="margin-top:16px;">
       <h3 style="font-size:16px;margin-bottom:6px;">🔔 Recordatorios por correo</h3>
-      <p style="font-size:13.5px;color:var(--ink-dim);line-height:1.6;">Recibirás un correo recordatorio <b>una hora antes</b> del inicio de cada partido al correo que registraste en el formulario, invitándote a ingresar tu marcador antes del cierre. Verifica tu bandeja de entrada y spam.</p>
+      <p style="font-size:13.5px;color:var(--ink-dim);line-height:1.6;">Si a esa altura aún no has registrado tu marcador, te llega un correo recordatorio <b>una hora antes de que se bloquee</b> cada partido (30 minutos antes de su inicio), al correo que registraste en el formulario. Si ya lo registraste, no te llega nada. Verifica tu bandeja de entrada y spam.</p>
     </div>
     <div class="card" style="margin-top:16px;">
       <h3 style="font-size:16px;margin-bottom:10px;">🕒 Horarios oficiales (FIFA → hora Colombia)</h3>
@@ -931,7 +931,7 @@ async function registrarEnNube(usuario){
     const resp = await fetch(SHEETS_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" }, // evita preflight CORS en Apps Script
-      body: JSON.stringify(usuario),
+      body: JSON.stringify({...usuario, accion:"registro"}),
       signal: ctrl.signal
     });
     clearTimeout(timeout);
@@ -1192,6 +1192,18 @@ function guardarPronosticoValor(partidoId, l, v){
   const existente = miPrediccion(partidoId);
   if(existente){ existente.l=l; existente.v=v; existente.fecha=new Date().toISOString(); }
   else { predicciones.push({usuarioId:sesionId, partidoId, l, v, fecha:new Date().toISOString()}); }
+  sincronizarPronostico(partidoId, l, v);
+}
+
+function sincronizarPronostico(partidoId, l, v){
+  if(!SHEETS_ENDPOINT) return;
+  const u = usuarioActual();
+  if(!u || !u.correo) return;
+  fetch(SHEETS_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ accion:"pronostico", correo:u.correo, partidoId, l, v })
+  }).catch(()=>{});
 }
 
 function guardarPronostico(partidoId){
