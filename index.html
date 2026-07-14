@@ -711,8 +711,12 @@ footer b{color:var(--ink-dim);}
   <div class="modal" style="max-width:640px;">
     <button class="modal-close" data-action="cerrar-admin">✕</button>
     <h3>⚙️ Panel del organizador</h3>
-    <p class="hint" style="margin-bottom:14px;">Acceso restringido: registra aquí el marcador oficial de cada partido para actualizar puntajes y clasificación.</p>
+    <p class="hint" style="margin-bottom:14px;">Acceso restringido: registra el marcador oficial de cada partido y define los cruces de semifinal y final.</p>
     <div id="adminGate">
+      <div class="field">
+        <label for="adminCorreo">Correo del organizador</label>
+        <input type="email" id="adminCorreo" placeholder="correo@dominio.com">
+      </div>
       <div class="field">
         <label for="adminPass">Clave del organizador</label>
         <input type="password" id="adminPass" placeholder="••••••">
@@ -721,6 +725,12 @@ footer b{color:var(--ink-dim);}
       <button class="btn btn-primary btn-block" style="margin-top:12px;" data-action="validar-admin">Entrar</button>
     </div>
     <div id="adminPanel" style="display:none;">
+      <h4 style="font-size:14px;margin-bottom:10px;">🏆 Cruces de Tercer Puesto y Gran Final</h4>
+      <p class="hint" style="margin-bottom:12px;">Selecciona, entre los 4 finalistas, quién juega cada llave. Se guarda para todos los que entren a la app.</p>
+      <div id="adminCruces"></div>
+      <p class="hint" id="crucesEstado" style="margin-top:6px;"></p>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="font-size:14px;margin-bottom:10px;">📋 Resultados oficiales</h4>
       <div id="adminPartidos"></div>
       <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
       <button class="btn btn-outline btn-block" data-action="reiniciar-demo">🔄 Reiniciar datos de la demo</button>
@@ -823,6 +833,16 @@ function renderFlag(team){
   return team.flag || "";
 }
 const ADMIN_PASS = "MUNDIAL2026";
+const ADMIN_CORREO = "ceiscol.concursos@gmail.com";
+
+/* Los 4 equipos que llegaron a semifinales — de aquí sale el selector
+   para armar el cruce de Tercer Puesto y de la Gran Final. */
+const EQUIPOS_FINALISTAS = [
+  {nombre:"Francia", code:"FRA", iso:"FR"},
+  {nombre:"España", code:"ESP", iso:"ES"},
+  {nombre:"Argentina", code:"ARG", iso:"AR"},
+  {nombre:"Inglaterra", code:"ENG", iso:"ENG"}
+];
 
 /* ============================================================
    SINCRONIZACIÓN EN LA NUBE (Google Sheets + correo vía Apps Script)
@@ -848,6 +868,7 @@ const LS = {
   usuarios: "pm26_usuarios",
   predicciones: "pm26_predicciones",
   resultados: "pm26_resultados",
+  cruces: "pm26_cruces",
   sesion: "pm26_sesion"
 };
 function loadLS(k, fallback){ try{ return JSON.parse(localStorage.getItem(k)) ?? fallback; }catch(e){ return fallback; } }
@@ -856,7 +877,21 @@ function saveLS(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
 let usuarios = loadLS(LS.usuarios, []);
 let predicciones = loadLS(LS.predicciones, []);
 let resultados = loadLS(LS.resultados, {});
+let cruces = loadLS(LS.cruces, {}); // {tp:{local:"ARG",visitante:"ENG"}, final:{...}} — código de EQUIPOS_FINALISTAS
 let sesionId = localStorage.getItem(LS.sesion) || null;
+
+function aplicarCruces(){
+  Object.keys(cruces).forEach(partidoId=>{
+    const partido = PARTIDOS.find(p=>p.id===partidoId);
+    const c = cruces[partidoId];
+    if(!partido || !c) return;
+    const eqLocal = EQUIPOS_FINALISTAS.find(e=>e.code===c.local);
+    const eqVisit = EQUIPOS_FINALISTAS.find(e=>e.code===c.visitante);
+    if(eqLocal){ partido.local = {...eqLocal}; partido.porDefinir = false; }
+    if(eqVisit){ partido.visitante = {...eqVisit}; partido.porDefinir = false; }
+  });
+}
+aplicarCruces();
 
 /* ============================================================
    ALIAS / AVATAR ANÓNIMOS
@@ -1399,13 +1434,79 @@ document.getElementById("fabAdmin").addEventListener("click", ()=>{
   document.getElementById("modalAdmin").classList.add("open");
 });
 function validarAdmin(){
+  const correo = document.getElementById("adminCorreo").value.trim().toLowerCase();
   const val = document.getElementById("adminPass").value;
   const err = document.getElementById("adminErr");
+  if(correo !== ADMIN_CORREO.toLowerCase()){ err.textContent = "Ese correo no tiene permisos de organizador."; return; }
   if(val !== ADMIN_PASS){ err.textContent = "Clave incorrecta."; return; }
   err.textContent = "";
   document.getElementById("adminGate").style.display = "none";
   document.getElementById("adminPanel").style.display = "block";
+  renderAdminCruces();
   renderAdminPartidos();
+}
+function renderAdminCruces(){
+  const cont = document.getElementById("adminCruces");
+  const partidosCruce = PARTIDOS.filter(p=>p.id==="tp" || p.id==="final");
+  cont.innerHTML = partidosCruce.map(p=>{
+    const opciones = (seleccionado)=> '<option value="">Selecciona…</option>' + EQUIPOS_FINALISTAS.map(eq=>
+      `<option value="${eq.code}" ${seleccionado===eq.code?"selected":""}>${eq.nombre}</option>`
+    ).join("");
+    const localActual = EQUIPOS_FINALISTAS.some(eq=>eq.code===p.local.code) ? p.local.code : "";
+    const visitanteActual = EQUIPOS_FINALISTAS.some(eq=>eq.code===p.visitante.code) ? p.visitante.code : "";
+    return `
+    <div style="padding:12px 0;border-top:1px solid var(--border);">
+      <div style="font-size:12.5px;font-weight:700;color:var(--ink-dim);margin-bottom:8px;text-transform:uppercase;">${p.fase}</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <select id="cruce-local-${p.id}" style="flex:1;min-width:130px;">${opciones(localActual)}</select>
+        <span style="color:var(--ink-faint);font-weight:700;">vs</span>
+        <select id="cruce-visit-${p.id}" style="flex:1;min-width:130px;">${opciones(visitanteActual)}</select>
+        <button class="btn btn-sm btn-primary" data-guardar-cruce="${p.id}">Guardar</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+async function guardarCruce(partidoId){
+  const codLocal = document.getElementById("cruce-local-"+partidoId).value;
+  const codVisit = document.getElementById("cruce-visit-"+partidoId).value;
+  if(!codLocal || !codVisit){ toast("Selecciona los dos equipos","⚠️"); return; }
+  if(codLocal === codVisit){ toast("Los dos equipos no pueden ser el mismo","⚠️"); return; }
+
+  const equipoLocal = EQUIPOS_FINALISTAS.find(e=>e.code===codLocal);
+  const equipoVisit = EQUIPOS_FINALISTAS.find(e=>e.code===codVisit);
+  const partido = PARTIDOS.find(p=>p.id===partidoId);
+  partido.local = {...equipoLocal};
+  partido.visitante = {...equipoVisit};
+  partido.porDefinir = false;
+
+  cruces[partidoId] = { local: equipoLocal.code, visitante: equipoVisit.code };
+  saveLS(LS.cruces, cruces);
+  renderTodo();
+  renderAdminCruces();
+
+  const estadoEl = document.getElementById("crucesEstado");
+  estadoEl.textContent = "⏳ Guardando en el servidor…";
+  const resp = await sincronizarCruces();
+  if(resp && resp.ok){
+    estadoEl.textContent = "✅ Listo — ya lo ven todos los que entren a la app.";
+    toast("Cruce guardado y sincronizado 🏆");
+  } else {
+    estadoEl.textContent = "⚠️ Se guardó en este dispositivo, pero no se pudo sincronizar con el servidor. Vuelve a intentar.";
+    toast("No se pudo sincronizar con el servidor","⚠️");
+  }
+}
+async function sincronizarCruces(){
+  if(!SHEETS_ENDPOINT) return {ok:true, sinConfigurar:true};
+  try{
+    const resp = await fetch(SHEETS_ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ accion:"cruces", clave:ADMIN_PASS, cruces })
+    });
+    return await resp.json();
+  }catch(err){
+    return {ok:false, error:"red"};
+  }
 }
 function renderAdminPartidos(){
   const cont = document.getElementById("adminPartidos");
@@ -1478,11 +1579,30 @@ document.addEventListener("click", (e)=>{
   const resEl = e.target.closest("[data-guardar-resultado]");
   if(resEl){ guardarResultado(resEl.dataset.guardarResultado); return; }
 
+  const cruceEl = e.target.closest("[data-guardar-cruce]");
+  if(cruceEl){ guardarCruce(cruceEl.dataset.guardarCruce); return; }
+
   const accionEl = e.target.closest("[data-action]");
   if(accionEl && ACCIONES_SIN_PARAMETRO[accionEl.dataset.action]){
     ACCIONES_SIN_PARAMETRO[accionEl.dataset.action]();
   }
 });
+
+async function cargarCrucesRemotos(){
+  if(!SHEETS_ENDPOINT) return;
+  try{
+    const resp = await fetch(SHEETS_ENDPOINT + "?accion=cruces");
+    const data = await resp.json();
+    if(data && data.ok && data.cruces && Object.keys(data.cruces).length){
+      cruces = data.cruces;
+      saveLS(LS.cruces, cruces);
+      aplicarCruces();
+      renderTodo();
+    }
+  }catch(err){
+    // sin internet o backend no disponible: se sigue usando lo que haya en este dispositivo
+  }
+}
 
 (function init(){
   if(sesionId && usuarios.some(u=>u.id===sesionId)){
@@ -1491,6 +1611,7 @@ document.addEventListener("click", (e)=>{
     document.getElementById("tabRegistro").hidden = true;
   }
   renderTodo();
+  cargarCrucesRemotos();
 })();
 </script>
 </body>
