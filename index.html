@@ -1524,14 +1524,31 @@ function renderAdminPartidos(){
     </div>`;
   }).join("");
 }
-function guardarResultado(id){
+async function guardarResultado(id){
   const l = parseInt(document.getElementById("adm-l-"+id).value,10);
   const v = parseInt(document.getElementById("adm-v-"+id).value,10);
   if(isNaN(l)||isNaN(v)){ toast("Marcador inválido","⚠️"); return; }
   resultados[id] = {l,v};
   saveLS(LS.resultados, resultados);
-  toast("Resultado guardado, clasificación actualizada 🏆");
   renderTodo();
+  toast("Resultado guardado, sincronizando…","🏆");
+
+  const resp = await sincronizarResultado(id, l, v);
+  if(resp && resp.ok){ toast("Resultado sincronizado — ya lo ven todos ✅","🏆"); }
+  else { toast("Se guardó en este dispositivo, pero no se pudo sincronizar con el servidor","⚠️"); }
+}
+async function sincronizarResultado(partidoId, l, v){
+  if(!SHEETS_ENDPOINT) return {ok:true, sinConfigurar:true};
+  try{
+    const resp = await fetch(SHEETS_ENDPOINT, {
+      method:"POST",
+      headers:{ "Content-Type":"text/plain;charset=utf-8" },
+      body: JSON.stringify({ accion:"resultado", clave:ADMIN_PASS, partidoId, l, v })
+    });
+    return await resp.json();
+  }catch(err){
+    return {ok:false, error:"red"};
+  }
 }
 function reiniciarDemo(){
   if(!confirm("¿Borrar todos los datos de la demo (inscritos, pronósticos y resultados)?")) return;
@@ -1588,17 +1605,25 @@ document.addEventListener("click", (e)=>{
   }
 });
 
-async function cargarCrucesRemotos(){
+async function cargarEstadoRemoto(){
   if(!SHEETS_ENDPOINT) return;
   try{
-    const resp = await fetch(SHEETS_ENDPOINT + "?accion=cruces");
+    const resp = await fetch(SHEETS_ENDPOINT + "?accion=estado");
     const data = await resp.json();
-    if(data && data.ok && data.cruces && Object.keys(data.cruces).length){
+    if(!data || !data.ok) return;
+    let cambio = false;
+    if(data.cruces && Object.keys(data.cruces).length){
       cruces = data.cruces;
       saveLS(LS.cruces, cruces);
       aplicarCruces();
-      renderTodo();
+      cambio = true;
     }
+    if(data.resultados && Object.keys(data.resultados).length){
+      resultados = {...resultados, ...data.resultados};
+      saveLS(LS.resultados, resultados);
+      cambio = true;
+    }
+    if(cambio) renderTodo();
   }catch(err){
     // sin internet o backend no disponible: se sigue usando lo que haya en este dispositivo
   }
@@ -1611,7 +1636,7 @@ async function cargarCrucesRemotos(){
     document.getElementById("tabRegistro").hidden = true;
   }
   renderTodo();
-  cargarCrucesRemotos();
+  cargarEstadoRemoto();
 })();
 </script>
 </body>
